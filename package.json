@@ -1,0 +1,47 @@
+{
+  "name": "json-error-handler",
+  "version": "0.1.0",
+  "description": "A json returning express error handler.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/influentialpublishers/json-error-handler.git"
+  },
+  "keywords": [
+    "express",
+    "error",
+    "json"
+  ],
+  "author": "Nathan A Sculli <nsculli@influential.co>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/influentialpublishers/json-error-handler/issues"
+  },
+  "homepage": "https://github.com/influentialpublishers/json-error-handler#readme",
+  "eslintConfig": {
+    "extends": "eslint:recommended",
+    "parserOptions": {
+      "ecmaVersion": 6,
+      "sourceType": "module",
+      "ecmaFeatures": {}
+    },
+    "env": {
+      "node": true
+    },
+    "ecmaFeatures": {
+      "arrowFunctions": true,
+      "blockBindings": true,
+      "defaultParams": true,
+      "destructuring": true,
+      "spread": true,
+      "templateStrings": true
+    }
+  },
+  "dependencies": {
+    "debug": "^2.2.0",
+    "ramda": "^0.21.0"
+  }
+}

@@ -5,28 +5,46 @@ const ErrorHandler = require('../index');
 
 describe('json-error-handler', () => {
 
+
+  const req = {};
+  const res = {
+    status: () => null
+  , json: () => null
+  };
+
+
   it('should accept a user provided logging function', (done) => {
 
     const test_message = 'This is a test, this is only a test.';
 
     const logger = (err) => {
-      console.log('Error: ', err); //eslint-disable-line no-console
-      expect(err.message).to.eql(test_message);
-      return err;
+      expect(err).to.match(new RegExp(test_message));
     };
-
 
     const err = new Error(test_message);
     const handler = ErrorHandler(logger);
 
-    const req = {};
-    const res = {
-      status: () => null
-    , json: () => null
+    handler(err, req, res);
+    done();
+  });
+
+
+  it('should log out a stack trace when NODE_ENV is not production',
+  (done) => {
+
+    const test_logger = (err) => {
+      expect(err).to.match(/This is a test/);
+      expect(err).to.match(/at tryOnImmediate/);
+      expect(err).to.match(/at next/);
+      expect(err).to.match(/at processImmediate/);
     };
+
+    const err = new Error('This is a test');
+    const handler = ErrorHandler(test_logger);
 
     handler(err, req, res);
     done();
+
   });
 
 });

@@ -41,7 +41,7 @@ const errorJson    = (err) => {
 const logError     = (logger) => _.tap(_.when(
   _.both(
     _.compose(_.lt(499), _.prop('status'))
-  , _.compose(_.not, _.isNil, _.prop('stack'))
+  , _.compose(_.not, _.isNil, _.path(['error', 'stack']))
   )
   , _.compose(logger, inspect)
 ));

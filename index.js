@@ -2,7 +2,6 @@
 /**
  * The main error handler for Social Zombie
  */
-const debug       = require('debug')('express');
 const { inspect } = require('util');
 const _           = require('ramda');
 
@@ -39,12 +38,12 @@ const errorJson    = (err) => {
 
 
 // logError :: Error -> Error
-const logError     = _.tap(_.when(
+const logError     = (logger) => _.tap(_.when(
   _.both(
     _.compose(_.lt(499), _.prop('status'))
   , _.compose(_.not, _.isNil, _.prop('stack'))
   )
-  , _.compose(debug, inspect)
+  , _.compose(logger, inspect)
 ));
 
 
@@ -58,8 +57,8 @@ const arrayToError = (err_array) => {
   return err;
 };
 
-const errorTransform = _.compose(
-  logError
+const errorTransform = (error_logger) => _.compose(
+  error_logger
 , _.when(inProductionMode, clearTrace)
 , errorJson
 , _.when(Array.isArray, arrayToError)
@@ -72,10 +71,10 @@ const sendError    = (req, res) => (err) => {
 };
 
 // eslint-disable-next-line no-unused-vars
-const ErrorHandler = (err, req, res, next) => {
+const ErrorHandler = (logger) => (err, req, res, next) => {
   _.compose(
     sendError(req, res)
-  , errorTransform
+  , errorTransform(logError(logger))
   )(err);
 };
 

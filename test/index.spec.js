@@ -1,4 +1,5 @@
 /*eslint-env node, mocha*/
+const boom = require('boom')
 const expect = require('chai').expect;
 const ErrorHandler = require('../index');
 
@@ -45,6 +46,36 @@ describe('json-error-handler', () => {
     handler(err, req, res);
     done();
 
+  });
+
+  it('should handle a`boom.notFound` error',
+  (done) => {
+
+    const test_logger = (err) => {
+      expect(err.status).to.eql(404);
+    };
+
+    const err = boom.notFound('Not Found Test');
+    const handler = ErrorHandler(test_logger);
+
+    handler(err, req, res);
+    done();
+    
+  });
+
+  it('should handle a`boom.unauthorized` error',
+  (done) => {
+
+    const test_logger = (err) => {
+      expect(err.status).to.eql(401);
+    };
+
+    const err = boom.unauthorized('Invalid Credentials');
+    const handler = ErrorHandler(test_logger);
+
+    handler(err, req, res);
+    done();
+    
   });
 
 });

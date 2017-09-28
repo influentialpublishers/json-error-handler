@@ -3,7 +3,7 @@
  * The main error handler for Social Zombie
  */
 const { inspect } = require('util');
-const _           = require('ramda');
+const R           = require('ramda');
 
 
 const inProductionMode = () => {
@@ -23,6 +23,17 @@ const clearTrace   = (err_json) => {
 
 };
 
+// boomJson :: BoomError -> Json
+const boomJson = (err) => {
+  const json = {
+    message : err.message
+  , name    : err.name || 'UNKNOWN'
+  , error   : err
+  , status  : err.output.statusCode
+  }
+  return json;
+}
+
 
 // errorJson :: Error -> Json
 const errorJson    = (err) => {
@@ -30,20 +41,25 @@ const errorJson    = (err) => {
     message  : err.message
     , name   : err.name || 'UNKNOWN'
     , error  : err
-    , status : err.status || 500
+    , status : err.status || err.statusCode || 500
   };
 
   return json;
 };
 
+const toJson = R.cond([
+  [ R.prop('isBoom'), boomJson ],
+  [ R.T, errorJson ]
+])
+
 
 // logError :: Error -> Error
-const logError     = (logger) => _.tap(_.when(
-  _.both(
-    _.compose(_.lt(499), _.prop('status'))
-  , _.compose(_.not, _.isNil, _.path(['error', 'stack']))
+const logError     = (logger) => R.tap(R.when(
+  R.both(
+    R.compose(R.lt(499), R.prop('status'))
+  , R.compose(R.not, R.isNil, R.path(['error', 'stack']))
   )
-  , _.compose(logger, inspect)
+  , R.compose(logger, inspect)
 ));
 
 
@@ -51,17 +67,17 @@ const logError     = (logger) => _.tap(_.when(
 // and attach the rest as an add on.
 // arrayToError :: Array Error -> Error
 const arrayToError = (err_array) => {
-  let err       = _.head(err_array);
-  err.list      = _.compose(errorTransform, _.tail)(err_array);
+  let err       = R.head(err_array);
+  err.list      = R.compose(errorTransform, R.tail)(err_array);
 
   return err;
 };
 
-const errorTransform = (error_logger) => _.compose(
+const errorTransform = (error_logger) => R.compose(
   error_logger
-, _.when(inProductionMode, clearTrace)
-, errorJson
-, _.when(Array.isArray, arrayToError)
+, R.when(inProductionMode, clearTrace)
+, toJson
+, R.when(Array.isArray, arrayToError)
 );
 
 
@@ -72,7 +88,7 @@ const sendError    = (req, res) => (err) => {
 
 // eslint-disable-next-line no-unused-vars
 const ErrorHandler = (logger) => (err, req, res, next) => {
-  _.compose(
+  R.compose(
     sendError(req, res)
   , errorTransform(logError(logger))
   )(err);

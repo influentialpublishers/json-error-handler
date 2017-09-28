@@ -1,6 +1,6 @@
 {
   "name": "json-error-handler",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "A json returning express error handler.",
   "main": "index.js",
   "scripts": {

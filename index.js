@@ -74,8 +74,8 @@ const arrayToError = (err_array) => {
 };
 
 const errorTransform = (error_logger) => R.compose(
-  error_logger
-, R.when(inProductionMode, clearTrace)
+  R.when(inProductionMode, clearTrace)
+, R.tap(error_logger)
 , toJson
 , R.when(Array.isArray, arrayToError)
 );

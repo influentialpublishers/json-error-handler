@@ -1,6 +1,6 @@
 {
   "name": "json-error-handler",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "description": "A json returning express error handler.",
   "main": "index.js",
   "scripts": {
@@ -21,32 +21,13 @@
     "url": "https://github.com/influentialpublishers/json-error-handler/issues"
   },
   "homepage": "https://github.com/influentialpublishers/json-error-handler#readme",
-  "eslintConfig": {
-    "extends": "eslint:recommended",
-    "parserOptions": {
-      "ecmaVersion": 6,
-      "sourceType": "module",
-      "ecmaFeatures": {}
-    },
-    "env": {
-      "node": true
-    },
-    "ecmaFeatures": {
-      "arrowFunctions": true,
-      "blockBindings": true,
-      "defaultParams": true,
-      "destructuring": true,
-      "spread": true,
-      "templateStrings": true
-    }
-  },
   "dependencies": {
-    "debug": "^2.2.0",
-    "ramda": "^0.21.0"
+    "debug": "^4.3.2",
+    "ramda": "^0.27.1"
   },
   "devDependencies": {
-    "boom": "^6.0.0",
-    "chai": "^3.5.0",
-    "mocha": "^2.5.3"
+    "@hapi/boom": "^9.1.4",
+    "chai": "^4.3.4",
+    "mocha": "^9.1.2"
   }
 }
